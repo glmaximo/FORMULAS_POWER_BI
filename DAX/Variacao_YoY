@@ -1,0 +1,1 @@
+Var % YoY = DIVIDE([Total Vendas] - [Vendas Ano Anterior], [Vendas Ano Anterior])

@@ -1,0 +1,1 @@
+% do Total = DIVIDE([Total Vendas], CALCULATE([Total Vendas], ALL(Vendas)))

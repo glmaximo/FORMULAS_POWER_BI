@@ -1,0 +1,18 @@
+let
+    Data = Tabela_FATO [Data],
+    DataInicial = Date.StartOfYear(List.Min(Data)),
+    DataFinal = Date.EndOfYear(List.Max(Data)),
+    QtdeDias = Number.From(DataFinal - DataInicial)+1,
+    ListaDatas = List.Dates(DataInicial,QtdeDias,#duration(1, 0, 0, 0)),
+    #"Lista Invertida" = List.Reverse(ListaDatas),
+    #"Convertido para Tabela" = Table.FromList(#"Lista Invertida", Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Colunas Renomeadas" = Table.RenameColumns(#"Convertido para Tabela",{{"Column1", "Data"}}),
+    #"Tipo Alterado com Localidade" = Table.TransformColumnTypes(#"Colunas Renomeadas", {{"Data", type date}}, "pt-BR"),
+    #"Ano Inserido" = Table.AddColumn(#"Tipo Alterado com Localidade", "Ano", each Date.Year([Data]), Int64.Type),
+    #"Mês Inserido" = Table.AddColumn(#"Ano Inserido", "Mês", each Date.Month([Data]), Int64.Type),
+    #"Nome do Mês Inserido" = Table.AddColumn(#"Mês Inserido", "Nome do Mês", each Date.MonthName([Data]), type text),
+    #"Primeiros Caracteres Inseridos" = Table.AddColumn(#"Nome do Mês Inserido", "Primeiros caracteres", each Text.Start([Nome do Mês], 3), type text),
+    #"Colocar Cada Palavra Em Maiúscula" = Table.TransformColumns(#"Primeiros Caracteres Inseridos",{{"Primeiros caracteres", Text.Proper, type text}}),
+    #"Colunas Renomeadas1" = Table.RenameColumns(#"Colocar Cada Palavra Em Maiúscula",{{"Primeiros caracteres", "Mês Abrev."}})
+in
+    #"Colunas Renomeadas1"

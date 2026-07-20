@@ -1,0 +1,1 @@
+Vendas Ano Anterior = CALCULATE([Total Vendas], SAMEPERIODLASTYEAR('Calendario'[Data]))

@@ -1,0 +1,59 @@
+Fluxo de Matriculas Acumuladas 2025 = 
+/*O objetivo dessa fórmula é formatar a variável calculada "Total de Participação" a partir do "Total de Novos Alunos" e a soma de alunos ATIVOS - APROV - APROV_PARCIAL - REPROV que permaneceram na base de alunos*/
+VAR porcent_total_particip = [% Captacao Total x Meta 2025]
+VAR total_participacao_formatada = FORMAT(porcent_total_particip, "0%")
+VAR total_participacao_formatada_condic = IF(total_participacao_formatada="-100%",BLANK(),total_participacao_formatada)
+/*Comecei um processo de formatação dos valores de meta e produção mas não foi mais necessário, porque basta selecionar a "mascara" "Fluxo de Matriculas Acumualdas" e seleciuonar a virgula no menu Formatação*/
+VAR formacao_pedagogica_r2_meta = FORMAT([Formação Pedagogica R2 - META], "0")
+VAR formacao_pedagogica_r2 = FORMAT([Formação Pedagógica R2 - PRODUÇÃO - 2025], "0")
+/*Inserir na Mascara de variáveis designada como Dim_Fluxo_Matriculas_Acumulado os resultados calculados individualmente de cada modalidade sob a condição de que os alunos estejam com os status da matricula em ATIVOS - APROV - APROV_PARCIAL - REPROV*/
+VAR mascara_resultados_calculados_GP14 = 
+IF(
+    SWITCH(
+    SELECTEDVALUE(Dim_Fluxo_Matriculas_Acumulado[id_organizacoes]), 
+    1,[Formação Pedagogica R2 - META], 
+    2,[Formação Pedagógica R2 - PRODUÇÃO - 2025],
+    4,[Graduação EAD - META],
+    7,[Graduação EAD - PRODUÇÃO - 2025],
+    5,[Tecnólogo - META],
+    6,[Captação Tecnólogos - 2025],
+    8,[Graduação Presencial - META],
+    9,[Graduação Presencial - PRODUÇÃO - 2025],
+    11,[Pós-Graduação EAD - META], 
+    12,[Pós-Graduação EAD - PRODUÇÃO - 2025],
+    13,[Pós-Graduação Presencial - META], 
+    14,[Pós-Graduação Presencial - PRODUÇÃO - 2025],
+    15,[Total de Novos Alunos - META],
+    16,[Total de Novos Alunos Matriculados - PRODUÇÃO - 2025],
+    17,total_participacao_formatada_condic,
+    18,[Meta Alunos Ativos 2025],
+    19,[Resultado Produção 25 x Meta Ativos 25],
+    20,[Total de Evasao 2025],
+    /*21,[Total Diplomados e Certificados 2025]*/
+    22,[Saldo Alunos 25 (C-D-E)]
+)=BLANK(),"-",
+SWITCH(
+    SELECTEDVALUE(Dim_Fluxo_Matriculas_Acumulado[id_organizacoes]), 
+    1,[Formação Pedagogica R2 - META], 
+    2,[Formação Pedagógica R2 - PRODUÇÃO - 2025],
+    4,[Graduação EAD - META],
+    7,[Graduação EAD - PRODUÇÃO - 2025],
+    5,[Tecnólogo - META],
+    6,[Captação Tecnólogos - 2025],
+    8,[Graduação Presencial - META],
+    9,[Graduação Presencial - PRODUÇÃO - 2025], 
+    11,[Pós-Graduação EAD - META], 
+    12,[Pós-Graduação EAD - PRODUÇÃO - 2025],
+    13,[Pós-Graduação Presencial - META], 
+    14,[Pós-Graduação Presencial - PRODUÇÃO - 2025],
+    15,[Total de Novos Alunos - META],
+    16,[Total de Novos Alunos Matriculados - PRODUÇÃO - 2025],
+    17,total_participacao_formatada_condic,
+    18,[Meta Alunos Ativos 2025],
+    19,[Resultado Produção 25 x Meta Ativos 25],
+    20,[Total de Evasao 2025],
+    /*21,[Total Diplomados e Certificados 2025]*/
+    22,[Saldo Alunos 25 (C-D-E)]
+    ))
+RETURN
+mascara_resultados_calculados_GP14

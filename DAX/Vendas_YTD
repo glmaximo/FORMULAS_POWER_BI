@@ -1,0 +1,1 @@
+Vendas YTD = TOTALYTD([Total Vendas], 'Calendario'[Data])

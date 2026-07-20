@@ -1,0 +1,12 @@
+Total de Novos Alunos Todos os Anos YoY = 
+var ra_regra = 
+    IF([Total de Novos Alunos Todos os Anos]=0, 
+        BLANK(), 
+            CALCULATE(
+	            [Total de Novos Alunos Todos os Anos], 
+	                DATEADD('Calendario'[Data], -1, YEAR),
+                         Fact_GERAL[Dt_Matricula]>=DATE(2008,01,01)
+        )
+    )
+RETURN
+ra_regra

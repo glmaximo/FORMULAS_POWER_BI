@@ -1,0 +1,7 @@
+Classificação Cliente = 
+SWITCH(
+    TRUE(),
+    [Total Vendas] > 10000, "Ouro",
+    [Total Vendas] > 5000, "Prata",
+    "Bronze"
+)

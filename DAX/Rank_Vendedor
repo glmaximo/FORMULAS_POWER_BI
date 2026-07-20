@@ -1,0 +1,1 @@
+Rank Vendedor = RANKX(ALL(Vendedores[Nome]), [Total Vendas])

@@ -1,0 +1,6 @@
+N°_IES_2024 = 
+/*Calculo do Número de Instituição Superior (Pública e Privado) c/ e s/ Fins Lucrativos*/
+/* O título dessa variável foi ajustado para representar uma condição de comparação no visual de CARTÃO x Percentual*/
+CALCULATE(
+    DISTINCTCOUNT(Fato_Censo_Consolidado_2010_2024[CO_IES]),
+    FILTER('Calendário', 'Calendário'[Ano] = 2024))

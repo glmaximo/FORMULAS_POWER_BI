@@ -1,0 +1,16 @@
+Qtde_Matriculados_2010_2024_YoY = 
+/* Cálculo de Matriculados de 2010 a 2024 do Censup - Ano Anterior (YoY) */
+VAR Qtde_Matriculados_2010_2024 =
+    SUM(Fato_Censo_Consolidado_2010_2024[QT_MAT])
+
+VAR Ano_Atual =
+    MAX('Tab_Calendario'[Ano])
+
+VAR Qtde_Matriculados_2010_2024_yoy =
+    CALCULATE(
+        SUM(Fato_Censo_Consolidado_2010_2024[QT_MAT]),
+        'Tab_Calendario'[Ano] = Ano_Atual - 1
+    )
+
+RETURN
+    IF(Qtde_Matriculados_2010_2024 = 0, BLANK(), Qtde_Matriculados_2010_2024_yoy)

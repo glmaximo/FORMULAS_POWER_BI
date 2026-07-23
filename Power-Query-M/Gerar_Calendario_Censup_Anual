@@ -1,0 +1,7 @@
+let
+    Anos = Fato_Censo_Consolidado_2015_2024[NU_ANO_CENSO],
+    ListaAnos = List.Sort(List.Distinct(Anos), Order.Descending),
+    Tabela = Table.FromList(ListaAnos, Splitter.SplitByNothing(), {"Ano"}),
+    #"Tipo Alterado" = Table.TransformColumnTypes(Tabela, {{"Ano", Int64.Type}})
+in
+    #"Tipo Alterado"

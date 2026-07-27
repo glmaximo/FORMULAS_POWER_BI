@@ -1,0 +1,5 @@
+Ticket_Médio_Transações = 
+/* Calcula o Ticket Médio das Transações realizadas por PFs e PJs. O resultado da razão será dado em moeda R$ por meio da função de formatação FORMAT*/
+VAR ticket_medio = DIVIDE([Valor_Total_Transacionado],[Quantidade_Total_de_Transações],0)
+RETURN
+    FORMAT(ticket_medio, "R$ #")

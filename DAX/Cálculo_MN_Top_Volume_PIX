@@ -1,0 +1,9 @@
+Top_Municipio_Nome = 
+VAR TabelaRanking = 
+    TOPN(
+        1,
+        ALL('Fato_Transações_PIX_MN'[MN]),
+        CALCULATE([Valor_Total_Transacionado])
+    )
+RETURN
+    CONCATENATEX(TabelaRanking, 'Fato_Transações_PIX_MN'[MN])

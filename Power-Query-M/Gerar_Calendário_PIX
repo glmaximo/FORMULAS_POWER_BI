@@ -1,0 +1,25 @@
+let
+    // Etapa 1: pegar os anos distintos da fato
+    Anos = Fato_Transações_PIX_MN[Dta_Ano],
+    ListaAnos = List.Sort(List.Distinct(Anos), Order.Ascending),
+
+    // Etapa 2: gerar todos os meses (1 a 12) para cada ano encontrado
+    TabelaAnos = Table.FromList(ListaAnos, Splitter.SplitByNothing(), {"Ano"}),
+    #"Tipo Alterado Ano" = Table.TransformColumnTypes(TabelaAnos, {{"Ano", Int64.Type}}),
+    #"Meses Adicionados" = Table.AddColumn(#"Tipo Alterado Ano", "Mes", each {1..12}),
+    #"Meses Expandidos" = Table.ExpandListColumn(#"Meses Adicionados", "Mes"),
+
+    // Etapa 3: criar uma coluna de Data (primeiro dia do mês), base para ordenação e relacionamento
+    #"Data Adicionada" = Table.AddColumn(#"Meses Expandidos", "Data", each #date([Ano], [Mes], 1), type date),
+
+    // Etapa 4: colunas descritivas (nome do mês, abreviação, trimestre, chave Ano-Mês)
+    #"Nome do Mes Adicionado" = Table.AddColumn(#"Data Adicionada", "Nome do Mes", each Date.MonthName([Data]), type text),
+    #"Mes Abrev Adicionado" = Table.AddColumn(#"Nome do Mes Adicionado", "Mes Abrev", each Text.Start(Date.MonthName([Data]), 3), type text),
+    #"Mes Abrev Maiuscula" = Table.TransformColumns(#"Mes Abrev Adicionado", {{"Mes Abrev", Text.Proper, type text}}),
+    #"Trimestre Adicionado" = Table.AddColumn(#"Mes Abrev Maiuscula", "Trimestre", each "T" & Number.ToText(Date.QuarterOfYear([Data])), type text),
+    #"AnoMes Adicionado" = Table.AddColumn(#"Trimestre Adicionado", "AnoMes", each Number.ToText([Ano]) & (if [Mes] < 10 then "0" else "") & Number.ToText([Mes]), type text),
+
+    // Etapa 5: ordenar por data (mais recente ou mais antigo primeiro, ajuste conforme preferir)
+    #"Linhas Classificadas" = Table.Sort(#"AnoMes Adicionado", {{"Data", Order.Ascending}})
+in
+    #"Linhas Classificadas"

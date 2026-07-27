@@ -1,0 +1,27 @@
+let
+    Fonte = Json.Document(Web.Contents("https://servicodados.ibge.gov.br/api/v1/localidades/municipios")),
+    #"Convertido para Tabela" = Table.FromList(Fonte, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Coluna Expandida" = Table.ExpandRecordColumn(#"Convertido para Tabela", "Column1",
+        {"id", "nome", "microrregiao", "regiao-imediata"},
+        {"Municipio_Ibge", "Municipio_Nome", "microrregiao", "regiao-imediata"}),
+
+    // Expandir Microrregião -> Mesorregião -> UF -> Região
+    #"Microrregiao Expandida" = Table.ExpandRecordColumn(#"Coluna Expandida", "microrregiao",
+        {"nome", "mesorregiao"}, {"Microrregiao", "mesorregiao"}),
+    #"Mesorregiao Expandida" = Table.ExpandRecordColumn(#"Microrregiao Expandida", "mesorregiao",
+        {"nome", "UF"}, {"Mesorregiao", "UF"}),
+    #"UF Expandida" = Table.ExpandRecordColumn(#"Mesorregiao Expandida", "UF",
+        {"nome", "sigla", "regiao"}, {"Estado_Nome", "Estado_Sigla", "regiao"}),
+    #"Regiao Expandida" = Table.ExpandRecordColumn(#"UF Expandida", "regiao",
+        {"nome"}, {"Regiao_Nome"}),
+
+    // Expandir Região Imediata -> Região Intermediária
+    #"Regiao Imediata Expandida" = Table.ExpandRecordColumn(#"Regiao Expandida", "regiao-imediata",
+        {"nome", "regiao-intermediaria"}, {"Regiao_Imediata", "regiao-intermediaria"}),
+    #"Regiao Intermediaria Expandida" = Table.ExpandRecordColumn(#"Regiao Imediata Expandida", "regiao-intermediaria",
+        {"nome"}, {"Regiao_Intermediaria"}),
+
+    #"Tipo Alterado" = Table.TransformColumnTypes(#"Regiao Intermediaria Expandida",
+        {{"Municipio_Ibge", Int64.Type}, {"Municipio_Nome", type text}})
+in
+    #"Tipo Alterado"

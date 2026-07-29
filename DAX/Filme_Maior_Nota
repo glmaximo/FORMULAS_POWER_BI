@@ -1,0 +1,4 @@
+Filme_Maior_Nota = 
+VAR TopFilme = TOPN(1, Fato_Filmes, Fato_Filmes[Nota_Media])
+RETURN
+    CONCATENATEX(TopFilme, Fato_Filmes[Titulo])

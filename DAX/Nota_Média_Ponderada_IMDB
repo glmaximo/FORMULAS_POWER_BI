@@ -1,0 +1,6 @@
+Nota_Media_Ponderada = 
+DIVIDE(
+    SUMX(Fact_Filmes_IMDB_TMDB, [Nota_Media] * [Numero_Votos]),
+    SUM(Fact_Filmes_IMDB_TMDB[Numero_Votos]),
+    0
+)

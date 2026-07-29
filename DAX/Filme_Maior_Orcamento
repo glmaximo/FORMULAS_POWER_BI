@@ -1,0 +1,4 @@
+Filme_Maior_Orcamento = 
+VAR TopFilme = TOPN(1, Fato_Filmes, [Orcamento_Total])
+RETURN
+    CONCATENATEX(TopFilme, Fato_Filmes[Titulo])

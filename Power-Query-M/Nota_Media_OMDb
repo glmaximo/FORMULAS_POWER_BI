@@ -1,0 +1,7 @@
+Nota_Media_OMDb = 
+/* Média ponderada da nota do IMDb obtida via OMDb (Fato_Filmes_OMDB[IMDb_Rating_OMDb]),ponderada pelo número de votos, seguindo a mesma metodologia de Nota_Media_IMDB_Ponderada, para permitir comparação direta e justa entre a nota "original" e a nota vinda da OMDb. */
+DIVIDE(
+    SUMX(Fato_Filmes_OMDB, [IMDb_Rating_OMDb] * [Numero_Votos]),
+    SUM(Fato_Filmes_OMDB[Numero_Votos]),
+    0
+)

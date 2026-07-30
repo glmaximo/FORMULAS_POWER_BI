@@ -1,0 +1,2 @@
+Metascore_Maximo = 100
+/* Valor fixo que define o limite superior da escala do Metascore (0 a 100). Usado como campo "Máximo" no visual Medidor (Gauge). O Metacritic define essa escala como padrão oficial: 0 = rejeição total, 100 = aclamação universal. */

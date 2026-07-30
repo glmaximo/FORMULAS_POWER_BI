@@ -1,0 +1,2 @@
+Metascore_Minimo = 0
+/* Valor fixo que define o limite inferior da escala do Metascore (0 a 100). Usado como campo "Mínimo" no visual Medidor (Gauge), já que esse campo exige uma medida/coluna, não aceita número digitado direto no visual. */

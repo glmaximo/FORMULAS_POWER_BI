@@ -1,0 +1,8 @@
+Metascore_Meta = 61
+/* Valor de referência (61) que marca o início da faixa "Geralmente Favorável" na escala oficial do Metacritic. Usado como campo "Meta" no visual Medidor, aparece como uma marcação vertical no arco, indicando se a média do Metascore está acima (recepção favorável) ou abaixo (recepção mista/desfavorável) desse limiar.
+   Faixas oficiais do Metacritic:
+     81-100 = Aclamação Universal
+     61-80  = Geralmente Favorável
+     40-60  = Misto ou Neutro
+     20-39  = Geralmente Desfavorável
+     0-19   = Rejeição Total */

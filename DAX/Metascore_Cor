@@ -1,5 +1,12 @@
 Metascore_Cor = 
-/* Retorna a cor do preenchimento do medidor dinamicamente, comparando
-   o Metascore médio atual com a meta (Metascore_Meta). Se a meta mudar
-   depois, a cor se ajusta sozinha, sem precisar reconfigurar o visual. */
-IF([Metascore_Medio] >= [Metascore_Meta], "#10C755", "#F83108")
+/* Retorna a cor do preenchimento do medidor dinamicamente, seguindo o
+   sistema oficial de 3 cores do Metacritic (para filmes/TV/música):
+     0-39   = Vermelho (desfavorável)
+     40-60  = Amarelo (misto/neutro)
+     61-100 = Verde (favorável, a partir da Meta) */
+SWITCH(
+    TRUE(),
+    [Metascore_Medio] >= [Metascore_Meta], "#10C755",  // Verde
+    [Metascore_Medio] >= 40, "#F2C230",                // Amarelo
+    "#F83108"                                          // Vermelho
+)

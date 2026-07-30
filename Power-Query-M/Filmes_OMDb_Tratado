@@ -4,21 +4,35 @@ let
     #"Column1 Expandido" = Table.ExpandRecordColumn(#"Convertido para Tabela", "Column1",
         {"ID", "Titulo", "Ano", "Duracao_Min", "Generos", "Nota_Media", "Numero_Votos", "Orcamento", "Bilheteria", "Classificacao_Indicativa", "Diretor", "Elenco", "Premios", "Metascore", "IMDb_Rating_OMDb", "Rotten_Tomatoes"},
         {"ID", "Titulo", "Ano", "Duracao_Min", "Generos", "Nota_Media", "Numero_Votos", "Orcamento", "Bilheteria", "Classificacao_Indicativa", "Diretor", "Elenco", "Premios", "Metascore", "IMDb_Rating_OMDb", "Rotten_Tomatoes"}),
+
+    // Conversão de tipos "normais" (sem risco de ambiguidade de localidade)
     #"Tipo Alterado" = Table.TransformColumnTypes(#"Column1 Expandido", {
         {"ID", type text}, {"Titulo", type text}, {"Ano", Int64.Type}, {"Duracao_Min", Int64.Type},
         {"Generos", type text}, {"Nota_Media", type number}, {"Numero_Votos", Int64.Type},
         {"Orcamento", Currency.Type}, {"Bilheteria", Currency.Type},
         {"Classificacao_Indicativa", type text}, {"Diretor", type text}, {"Elenco", type text},
-        {"Premios", type text}, {"IMDb_Rating_OMDb", type number}
+        {"Premios", type text}
     }),
-    #"Metascore Numerico" = Table.AddColumn(#"Tipo Alterado", "Metascore_Num", each
+
+    // IMDb_Rating_OMDb vem como texto com ponto decimal (ex.: "7.3"), padrão americano.
+    // Precisa de localidade "en-US" explícita, senão o Power Query lê o ponto como
+    // separador de milhar (localidade pt-BR) e infla a nota em 10x (7.3 vira 73).
+    #"IMDb Rating Corrigido" = Table.TransformColumnTypes(#"Tipo Alterado", {{"IMDb_Rating_OMDb", type number}}, "en-US"),
+
+    // Metascore também vem como texto (às vezes "N/A"), o try evita quebrar a consulta inteira
+    #"Metascore Numerico" = Table.AddColumn(#"IMDb Rating Corrigido", "Metascore_Num", each
         try Number.From([Metascore]) otherwise null, type number),
+
+    // Rotten Tomatoes vem como texto ("85%"), convertido célula a célula com tratamento de erro
     #"Rotten Tomatoes Convertido" = Table.TransformColumns(#"Metascore Numerico", {
         {"Rotten_Tomatoes", each try Percentage.From(_) otherwise null, type number}
     }),
+
+    // Extrai o número de vitórias do texto livre de Prêmios (ex.: "3 wins & 15 nominations")
     #"Vitorias Extraidas" = Table.AddColumn(#"Rotten Tomatoes Convertido", "Qtde_Vitorias", each
         try Number.FromText(Text.BeforeDelimiter([Premios], " win")) otherwise 0, Int64.Type),
-    // Mantém IMDb_Rating_OMDb como número decimal (não Int64) e substitui erros por null (não 0)
+
+    // Erros de conversão viram null (não 0), para não puxar as médias para baixo artificialmente
     #"Erros Substituídos" = Table.ReplaceErrorValues(#"Vitorias Extraidas", {{"IMDb_Rating_OMDb", null}})
 in
     #"Erros Substituídos"

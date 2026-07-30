@@ -1,0 +1,5 @@
+Metascore_Cor = 
+/* Retorna a cor do preenchimento do medidor dinamicamente, comparando
+   o Metascore médio atual com a meta (Metascore_Meta). Se a meta mudar
+   depois, a cor se ajusta sozinha, sem precisar reconfigurar o visual. */
+IF([Metascore_Medio] >= [Metascore_Meta], "#10C755", "#F83108")

@@ -17,6 +17,8 @@ let
         {"Rotten_Tomatoes", each try Percentage.From(_) otherwise null, type number}
     }),
     #"Vitorias Extraidas" = Table.AddColumn(#"Rotten Tomatoes Convertido", "Qtde_Vitorias", each
-        try Number.FromText(Text.BeforeDelimiter([Premios], " win")) otherwise 0, Int64.Type)
+        try Number.FromText(Text.BeforeDelimiter([Premios], " win")) otherwise 0, Int64.Type),
+    // Mantém IMDb_Rating_OMDb como número decimal (não Int64) e substitui erros por null (não 0)
+    #"Erros Substituídos" = Table.ReplaceErrorValues(#"Vitorias Extraidas", {{"IMDb_Rating_OMDb", null}})
 in
-    #"Vitorias Extraidas"
+    #"Erros Substituídos"

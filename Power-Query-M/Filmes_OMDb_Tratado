@@ -1,0 +1,22 @@
+let
+    Fonte = Json.Document(File.Contents("C:\Users\tutor18.ead\Desktop\OneDrive\CURSOS_LIVRES\MICROSOFT POWER BI\PBI\PROJETO_4_IMDB\filmes_imdb_tmdb_omdb.json")),
+    #"Convertido para Tabela" = Table.FromList(Fonte, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Column1 Expandido" = Table.ExpandRecordColumn(#"Convertido para Tabela", "Column1",
+        {"ID", "Titulo", "Ano", "Duracao_Min", "Generos", "Nota_Media", "Numero_Votos", "Orcamento", "Bilheteria", "Classificacao_Indicativa", "Diretor", "Elenco", "Premios", "Metascore", "IMDb_Rating_OMDb", "Rotten_Tomatoes"},
+        {"ID", "Titulo", "Ano", "Duracao_Min", "Generos", "Nota_Media", "Numero_Votos", "Orcamento", "Bilheteria", "Classificacao_Indicativa", "Diretor", "Elenco", "Premios", "Metascore", "IMDb_Rating_OMDb", "Rotten_Tomatoes"}),
+    #"Tipo Alterado" = Table.TransformColumnTypes(#"Column1 Expandido", {
+        {"ID", type text}, {"Titulo", type text}, {"Ano", Int64.Type}, {"Duracao_Min", Int64.Type},
+        {"Generos", type text}, {"Nota_Media", type number}, {"Numero_Votos", Int64.Type},
+        {"Orcamento", Currency.Type}, {"Bilheteria", Currency.Type},
+        {"Classificacao_Indicativa", type text}, {"Diretor", type text}, {"Elenco", type text},
+        {"Premios", type text}, {"IMDb_Rating_OMDb", type number}
+    }),
+    #"Metascore Numerico" = Table.AddColumn(#"Tipo Alterado", "Metascore_Num", each
+        try Number.From([Metascore]) otherwise null, type number),
+    #"Rotten Tomatoes Convertido" = Table.TransformColumns(#"Metascore Numerico", {
+        {"Rotten_Tomatoes", each try Percentage.From(_) otherwise null, type number}
+    }),
+    #"Vitorias Extraidas" = Table.AddColumn(#"Rotten Tomatoes Convertido", "Qtde_Vitorias", each
+        try Number.FromText(Text.BeforeDelimiter([Premios], " win")) otherwise 0, Int64.Type)
+in
+    #"Vitorias Extraidas"

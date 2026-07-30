@@ -1,8 +1,9 @@
 Metascore_Meta = 61
-/* Valor de referência (61) que marca o início da faixa "Geralmente Favorável" na escala oficial do Metacritic. Usado como campo "Meta" no visual Medidor, aparece como uma marcação vertical no arco, indicando se a média do Metascore está acima (recepção favorável) ou abaixo (recepção mista/desfavorável) desse limiar.
-   Faixas oficiais do Metacritic:
-     81-100 = Aclamação Universal
-     61-80  = Geralmente Favorável
-     40-60  = Misto ou Neutro
-     20-39  = Geralmente Desfavorável
-     0-19   = Rejeição Total */
+/* Valor de referência (61), que marca oficialmente o início da faixa "verde" (avaliação favorável) no sistema de cores do próprio Metacritic. Usado como campo "Valor de destino" no visual Medidor.
+
+   Faixas oficiais do Metacritic para FILMES, TV e música:
+     0-39   = Vermelho (desfavorável)
+     40-60  = Amarelo (misto/neutro)
+     61-100 = Verde (favorável)
+
+   Atenção: esse corte vale para filmes/TV/música. Para video games, o Metacritic usa um critério mais rigoroso, e o "verde" só começa por volta de 75, não 61 (a crítica de games costuma dar notas mais duras). Como esta base cobre apenas filmes (titleType = movie), o valor 61 está correto aqui, mas não deve ser reaproveitado sem ajuste caso a base inclua jogos. */

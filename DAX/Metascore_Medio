@@ -1,0 +1,3 @@
+Metascore_Medio = 
+/* Média do Metascore (nota agregada de críticos profissionais, escala 0-100),uma das três fontes de avaliação crítica desta aba. */
+AVERAGE(Fato_Filmes_OMDB[Metascore_Num])
